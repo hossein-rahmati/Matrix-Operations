@@ -1,5 +1,29 @@
 #include "stdio.h"
-#define N 4
+#define N 3
+
+void swapLines(float matrix[N][N])
+{
+    float temp2;
+
+    for (int i = 0; i < 1; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            temp2 = matrix[i + 1][j];
+            matrix[i + 1][j] = matrix[i][j];
+            matrix[i][j] = temp2;
+        }
+    }
+
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            printf("%f ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
 
 float main()
 {
@@ -15,6 +39,12 @@ float main()
             printf("(%d,%d): ", i + 1, j + 1);
             scanf("%f", &matrix[i][j]);
         }
+    }
+
+    if (matrix[0][0] == 0)
+    {
+        swapLines(matrix);
+        determinant *= -1;
     }
 
     for (int i = 0; i < N; i++)
