@@ -1,28 +1,45 @@
 #include "stdio.h"
+#include "stdbool.h"
 
-void swapLines(int N, float matrix[N][N])
+void swapLines(int order, float matrix[order][order])
 {
-    float temp2;
-
+    float temp;
     for (int i = 0; i < 1; i++)
     {
-        for (int j = 0; j < N; j++)
+        for (int j = 0; j < order; j++)
         {
-            temp2 = matrix[i + 1][j];
+            temp = matrix[i + 1][j];
             matrix[i + 1][j] = matrix[i][j];
-            matrix[i][j] = temp2;
+            matrix[i][j] = temp;
         }
     }
 }
+
+void upperTriangle(int order, float matrix[order][order])
+{
+    float temp;
+
+    for (int i = 0; i < order; i++)
+    {
+        for (int j = i + 1; j < order; j++)
+        {
+            temp = matrix[j][i] / matrix[i][i];
+            for (int k = i; k < order; k++)
+            {
+                matrix[j][k] -= matrix[i][k] * temp;
+            }
+        }
+    }
+}
+
 void Determinant()
 {
     int order;
     printf("Enter order of matrix: ");
     scanf("%d", &order);
     float matrix[order][order];
-    float temp;
     float determinant = 1;
-    printf("Hi, please enter a matrix:\n");
+    printf("Enter a matrix:\n");
 
     for (int i = 0; i < order; i++)
     {
@@ -39,17 +56,7 @@ void Determinant()
         determinant *= -1;
     }
 
-    for (int i = 0; i < order; i++)
-    {
-        for (int j = i + 1; j < order; j++)
-        {
-            temp = matrix[j][i] / matrix[i][i];
-            for (int k = i; k < order; k++)
-            {
-                matrix[j][k] -= matrix[i][k] * temp;
-            }
-        }
-    }
+    upperTriangle(order, matrix);
 
     for (int i = 0; i < order; i++)
     {
@@ -58,14 +65,20 @@ void Determinant()
 
     printf("Determinant is: %3.f", determinant);
 }
+
 void Inverse()
 {
     int order;
     printf("Enter order of matrix: ");
     scanf("%d", &order);
     float matrix[order][order + order];
-    float temp;
-    printf("Hi, please enter a matrix:\n");
+    float temp1;
+    float temp2;
+    float temp3;
+    float determinant = 1;
+    bool isSwaped = false;
+    float determinantValue;
+    printf("Enter a matrix:\n");
 
     for (int i = 0; i < order; i++)
     {
@@ -74,6 +87,25 @@ void Inverse()
             printf("(%d,%d): ", i + 1, j + 1);
             scanf("%f", &matrix[i][j]);
         }
+    }
+
+    upperTriangle(order, matrix);
+
+    for (int i = 0; i < order; i++)
+    {
+        determinant *= matrix[i][i];
+    }
+
+    if (determinant == 0)
+    {
+        printf("matrix doesn't have Inverse");
+        return 0;
+    }
+
+    if (matrix[0][0] == 0)
+    {
+        swapLines(order + order, matrix);
+        isSwaped = true;
     }
 
     for (int i = 0; i < order; i++)
@@ -89,10 +121,10 @@ void Inverse()
     {
         for (int j = i + 1; j < order; j++)
         {
-            temp = matrix[j][i] / matrix[i][i];
+            temp1 = matrix[j][i] / matrix[i][i];
             for (int k = i; k < order + order; k++)
             {
-                matrix[j][k] -= matrix[i][k] * temp;
+                matrix[j][k] -= matrix[i][k] * temp1;
             }
         }
     }
@@ -101,10 +133,10 @@ void Inverse()
     {
         for (int j = i - 1; j >= 0; j--)
         {
-            temp = matrix[j][i] / matrix[i][i];
+            temp1 = matrix[j][i] / matrix[i][i];
             for (int k = i; k < order + order; k++)
             {
-                matrix[j][k] -= matrix[i][k] * temp;
+                matrix[j][k] -= matrix[i][k] * temp1;
             }
         }
     }
@@ -117,6 +149,19 @@ void Inverse()
         }
     }
 
+    if (isSwaped)
+    {
+        for (int i = 0; i < order; i++)
+        {
+            for (int j = 0; j < 1; j++)
+            {
+                temp3 = matrix[i][j];
+                matrix[i][j] = matrix[i][j + 1];
+                matrix[i][j + 1] = temp3;
+            }
+        }
+    }
+
     for (int i = 0; i < order; i++)
     {
         for (int j = order; j < order + order; j++)
@@ -126,6 +171,7 @@ void Inverse()
         printf("\n");
     }
 }
+
 void SystemOfLinearEquations()
 {
     int order;
@@ -135,8 +181,9 @@ void SystemOfLinearEquations()
     float temp1;
     float temp2;
     float temp3 = 0;
+    float temp4;
     float answers[order];
-    printf("Hi, please enter a matrix:\n");
+    printf("Enter a matrix:\n");
 
     for (int i = 0; i < order; i++)
     {
@@ -145,6 +192,11 @@ void SystemOfLinearEquations()
             printf("(%d,%d): ", i + 1, j + 1);
             scanf("%f", &matrix[i][j]);
         }
+    }
+
+    if (matrix[0][0] == 0)
+    {
+        swapLines(order + 1, matrix);
     }
 
     for (int i = 0; i < order; i++)
@@ -179,7 +231,7 @@ void SystemOfLinearEquations()
 
     for (int i = 0; i < order; i++)
     {
-        printf("X%d: %.2f\t", i, answers[i]);
+        printf("X%d: %.2f\t", i + 1, answers[i]);
     }
 }
 
@@ -203,4 +255,6 @@ int main()
     default:
         break;
     }
+
+    return 0;
 }
