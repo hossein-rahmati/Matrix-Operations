@@ -1,12 +1,12 @@
 #include "stdio.h"
 #include "stdbool.h"
 
-void swapLines(int order, float matrix[order][order])
+void swapRows(int col, int row, float matrix[row][col])
 {
     float temp;
     for (int i = 0; i < 1; i++)
     {
-        for (int j = 0; j < order; j++)
+        for (int j = 0; j < col; j++)
         {
             temp = matrix[i + 1][j];
             matrix[i + 1][j] = matrix[i][j];
@@ -52,7 +52,7 @@ void Determinant()
 
     if (matrix[0][0] == 0)
     {
-        swapLines(order, matrix);
+        swapRows(order, order, matrix);
         determinant *= -1;
     }
 
@@ -113,8 +113,8 @@ void Inverse()
 
     if (matrix[0][0] == 0)
     {
-        swapLines(order + order, matrix);
         isSwaped = true;
+        swapRows(order + order, order, matrix);
     }
 
     for (int i = 0; i < order; i++)
@@ -162,12 +162,11 @@ void Inverse()
     {
         for (int i = 0; i < order; i++)
         {
-            temp3 = matrix[i][0];
-            matrix[i][0] = matrix[i][1];
-            matrix[i][1] = temp3;
+            temp3 = matrix[i][order];
+            matrix[i][order] = matrix[i][order + 1];
+            matrix[i][order + 1] = temp3;
         }
     }
-
 
     for (int i = 0; i < order; i++)
     {
@@ -203,7 +202,7 @@ void SystemOfLinearEquations()
 
     if (matrix[0][0] == 0)
     {
-        swapLines(order + 1, matrix);
+        swapRows(order + 1, order, matrix);
     }
 
     for (int i = 0; i < order; i++)
