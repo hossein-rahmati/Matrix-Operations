@@ -72,6 +72,7 @@ void Inverse()
     printf("Enter order of matrix: ");
     scanf("%d", &order);
     float matrix[order][order + order];
+    float cloneMatrix[order][order];
     float temp1;
     float temp2;
     float temp3;
@@ -89,17 +90,25 @@ void Inverse()
         }
     }
 
-    upperTriangle(order, matrix);
+    for (int i = 0; i < order; i++)
+    {
+        for (int j = 0; j < order; j++)
+        {
+            cloneMatrix[i][j] = matrix[i][j];
+        }
+    }
+
+    upperTriangle(order, cloneMatrix);
 
     for (int i = 0; i < order; i++)
     {
-        determinant *= matrix[i][i];
+        determinant *= cloneMatrix[i][i];
     }
 
     if (determinant == 0)
     {
         printf("matrix doesn't have Inverse");
-        return 0;
+        return;
     }
 
     if (matrix[0][0] == 0)
@@ -153,14 +162,12 @@ void Inverse()
     {
         for (int i = 0; i < order; i++)
         {
-            for (int j = 0; j < 1; j++)
-            {
-                temp3 = matrix[i][j];
-                matrix[i][j] = matrix[i][j + 1];
-                matrix[i][j + 1] = temp3;
-            }
+            temp3 = matrix[i][0];
+            matrix[i][0] = matrix[i][1];
+            matrix[i][1] = temp3;
         }
     }
+
 
     for (int i = 0; i < order; i++)
     {
@@ -238,7 +245,7 @@ void SystemOfLinearEquations()
 int main()
 {
     int operation;
-    printf("\nHi\n\n-Determinant (1)\n-System of linear equations (2)\n-Inverse (3)\n\nEnter a number to continue to matrix operations: ");
+    printf("\nHi\n\n-Determinant (1)\n-Inverse (2)\n-System of linear equations (3)\n\nEnter a number to continue to matrix operations: ");
     scanf("%d", &operation);
 
     switch (operation)
@@ -247,10 +254,10 @@ int main()
         Determinant();
         break;
     case 2:
-        SystemOfLinearEquations();
+        Inverse();
         break;
     case 3:
-        Inverse();
+        SystemOfLinearEquations();
         break;
     default:
         break;
